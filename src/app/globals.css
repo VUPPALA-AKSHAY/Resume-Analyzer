@@ -1,0 +1,261 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@theme {
+  --color-surface-variant: #d3e4fe;
+  --color-on-primary: #ffffff;
+  --color-on-tertiary-fixed-variant: #005047;
+  --color-primary-fixed: #dae2fd;
+  --color-error-container: #ffdad6;
+  --color-background: #f8f9ff;
+  --color-outline: #76777d;
+  --color-surface-dim: #cbdbf5;
+  --color-primary-fixed-dim: #bec6e0;
+  --color-surface-tint: #565e74;
+  --color-secondary: #006591;
+  --color-on-error-container: #93000a;
+  --color-surface-container: #e5eeff;
+  --color-surface-container-high: #dce9ff;
+  --color-surface-container-highest: #d3e4fe;
+  --color-tertiary-container: #00201c;
+  --color-on-surface-variant: #45464d;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-outline-variant: #c6c6cd;
+  --color-secondary-fixed-dim: #89ceff;
+  --color-surface-container-low: #eff4ff;
+  --color-secondary-fixed: #c9e6ff;
+  --color-tertiary: #000000;
+  --color-surface: #f8f9ff;
+  --color-on-primary-fixed: #131b2e;
+  --color-inverse-primary: #bec6e0;
+  --color-tertiary-fixed: #62fae3;
+  --color-on-tertiary-fixed: #00201c;
+  --color-on-tertiary: #ffffff;
+  --color-on-secondary-container: #004666;
+  --color-on-secondary-fixed-variant: #004c6e;
+  --color-on-error: #ffffff;
+  --color-on-primary-fixed-variant: #3f465c;
+  --color-on-primary-container: #7c839b;
+  --color-on-background: #0b1c30;
+  --color-on-surface: #0b1c30;
+  --color-inverse-surface: #213145;
+  --color-error: #ba1a1a;
+  --color-on-tertiary-container: #009485;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #39b8fd;
+  --color-tertiary-fixed-dim: #3cddc7;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-bright: #f8f9ff;
+  --color-primary-container: #131b2e;
+  --color-primary: #000000;
+  --color-on-secondary-fixed: #001e2f;
+
+  --spacing-gutter: 24px;
+  --spacing-container-max: 1280px;
+  --spacing-section-gap: 80px;
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-desktop: 40px;
+}
+
+:root {
+  color-scheme: light;
+  --chart-1: #006591;
+  --chart-2: #39b8fd;
+  --chart-3: #3cddc7;
+  --chart-4: #62fae3;
+  --chart-5: #89ceff;
+  --chart-background: #ffffff;
+  --chart-foreground: #0b1c30;
+  --chart-foreground-muted: #5f6b7c;
+  --chart-line-primary: #006591;
+  --chart-line-secondary: #3cddc7;
+  --chart-crosshair: rgba(0, 101, 145, 0.22);
+  --chart-grid: rgba(15, 28, 48, 0.08);
+  --chart-tooltip-background: rgba(11, 28, 48, 0.92);
+  --chart-tooltip-foreground: #f8f9ff;
+  --chart-tooltip-muted: #c6d4e8;
+  --chart-marker-background: #ffffff;
+  --chart-marker-border: rgba(15, 28, 48, 0.12);
+  --chart-marker-foreground: #0b1c30;
+  --chart-marker-badge-background: #e5eeff;
+  --chart-marker-badge-foreground: #004666;
+  --chart-segment-background: rgba(0, 101, 145, 0.08);
+  --chart-segment-line: rgba(0, 101, 145, 0.18);
+  --chart-indicator-color: #006591;
+  --chart-indicator-secondary-color: #3cddc7;
+  --chart-label: #5f6b7c;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-surface-variant: #1a2336;
+  --color-on-primary: #08111f;
+  --color-on-tertiary-fixed-variant: #7ff0df;
+  --color-primary-fixed: #1b2434;
+  --color-error-container: #4b1618;
+  --color-background: #05070b;
+  --color-outline: #7d8798;
+  --color-surface-dim: #0c1118;
+  --color-primary-fixed-dim: #233047;
+  --color-surface-tint: #8ba3c7;
+  --color-secondary: #79cfff;
+  --color-on-error-container: #ffb4ab;
+  --color-surface-container: #0f151f;
+  --color-surface-container-high: #151d29;
+  --color-surface-container-highest: #1b2432;
+  --color-tertiary-container: #0a2b27;
+  --color-on-surface-variant: #9cabc1;
+  --color-inverse-on-surface: #07111d;
+  --color-outline-variant: #273143;
+  --color-secondary-fixed-dim: #4bb8f4;
+  --color-surface-container-low: #0a1018;
+  --color-secondary-fixed: #13344b;
+  --color-tertiary: #ffffff;
+  --color-surface: #080c12;
+  --color-on-primary-fixed: #dfe7f6;
+  --color-inverse-primary: #233047;
+  --color-tertiary-fixed: #1d5e57;
+  --color-on-tertiary-fixed: #cbfff7;
+  --color-on-tertiary: #031816;
+  --color-on-secondary-container: #bfe9ff;
+  --color-on-secondary-fixed-variant: #93dcff;
+  --color-on-error: #690005;
+  --color-on-primary-fixed-variant: #c5d4eb;
+  --color-on-primary-container: #9fb0c8;
+  --color-on-background: #eef4ff;
+  --color-on-surface: #eef4ff;
+  --color-inverse-surface: #dce7fb;
+  --color-error: #ff7b72;
+  --color-on-tertiary-container: #62fae3;
+  --color-on-secondary: #031722;
+  --color-secondary-container: #1d8bcb;
+  --color-tertiary-fixed-dim: #2dbca7;
+  --color-surface-container-lowest: #0b1017;
+  --color-surface-bright: #16202d;
+  --color-primary-container: #dfe7f6;
+  --color-primary: #ffffff;
+  --color-on-secondary-fixed: #d8f4ff;
+  --chart-1: #4bb8f4;
+  --chart-2: #79cfff;
+  --chart-3: #2dd4bf;
+  --chart-4: #62fae3;
+  --chart-5: #a6e7ff;
+  --chart-background: #101722;
+  --chart-foreground: #eef4ff;
+  --chart-foreground-muted: #93a4bc;
+  --chart-line-primary: #4bb8f4;
+  --chart-line-secondary: #2dd4bf;
+  --chart-crosshair: rgba(121, 207, 255, 0.3);
+  --chart-grid: rgba(210, 228, 255, 0.1);
+  --chart-tooltip-background: rgba(10, 15, 23, 0.96);
+  --chart-tooltip-foreground: #eef4ff;
+  --chart-tooltip-muted: #b3c3db;
+  --chart-marker-background: #121925;
+  --chart-marker-border: rgba(210, 228, 255, 0.16);
+  --chart-marker-foreground: #eef4ff;
+  --chart-marker-badge-background: #182433;
+  --chart-marker-badge-foreground: #bfe9ff;
+  --chart-segment-background: rgba(75, 184, 244, 0.12);
+  --chart-segment-line: rgba(75, 184, 244, 0.24);
+  --chart-indicator-color: #79cfff;
+  --chart-indicator-secondary-color: #62fae3;
+  --chart-label: #9fb0c8;
+}
+
+html {
+  font-family: var(--font-sans), sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: "Inter", var(--font-sans), sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.upload-zone-pulse {
+  animation: soft-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.card-shadow {
+  box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+.dark .card-shadow {
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.interactive-shadow:hover {
+  box-shadow: 0px 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.glass-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.animate-progress {
+  animation: progress 1.5s ease-out forwards;
+}
+
+.project-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 101, 145, 0.2) transparent;
+}
+
+.project-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.project-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(57, 184, 253, 0.3),
+    rgba(0, 101, 145, 0.18)
+  );
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.project-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(57, 184, 253, 0.42),
+    rgba(0, 101, 145, 0.28)
+  );
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    border-color: #c6c6cd;
+  }
+  50% {
+    border-color: #006591;
+  }
+}
+
+@keyframes progress {
+  from {
+    stroke-dashoffset: 502.4;
+  }
+  to {
+    stroke-dashoffset: 110.5;
+  }
+}

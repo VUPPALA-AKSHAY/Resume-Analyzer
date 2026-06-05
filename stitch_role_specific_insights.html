@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CareerEmpower AI - Role-Specific Optimization</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#62fae3",
+                        "surface": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#d3e4fe",
+                        "surface-tint": "#565e74",
+                        "surface-dim": "#cbdbf5",
+                        "on-surface": "#0b1c30",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#000000",
+                        "secondary": "#006591",
+                        "on-tertiary-container": "#009485",
+                        "on-secondary-container": "#004666",
+                        "on-primary-fixed": "#131b2e",
+                        "outline": "#76777d",
+                        "tertiary-container": "#00201c",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f8f9ff",
+                        "outline-variant": "#c6c6cd",
+                        "primary": "#000000",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#89ceff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#45464d",
+                        "inverse-primary": "#bec6e0",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-container": "#131b2e",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-secondary-fixed": "#001e2f",
+                        "background": "#f8f9ff",
+                        "inverse-surface": "#213145",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "surface-container": "#e5eeff",
+                        "on-primary-container": "#7c839b",
+                        "on-background": "#0b1c30",
+                        "secondary-container": "#39b8fd",
+                        "tertiary-fixed-dim": "#3cddc7",
+                        "on-tertiary-fixed": "#00201c",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#c9e6ff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "base": "8px",
+                        "section-gap": "80px",
+                        "container-max": "1280px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-header {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .card-shadow {
+            box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05);
+        }
+        .interactive-shadow:hover {
+            box-shadow: 0px 10px 30px rgba(15, 23, 42, 0.08);
+        }
+        @keyframes progress {
+            from { stroke-dashoffset: 251.2; }
+            to { stroke-dashoffset: 75.36; }
+        }
+        .animate-progress {
+            animation: progress 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-md shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border-b border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-margin-desktop flex justify-between items-center h-20">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-primary">CareerEmpower AI</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Dashboard</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors" href="#">History</a>
+<a class="font-headline-md text-headline-md font-bold text-secondary border-b-2 border-secondary pb-1" href="#">Analysis</a>
+<a class="font-body-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Resources</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all active:scale-95">notifications</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all active:scale-95">settings</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95">Upload Resume</button>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNJXszA_pdlmQ6LuRkTcyZMRhi9v_uMdB7i6giEOlNJl-q5afjIAnUp8cbg-RMffaiA66oEi9Bg4tW22ueBoXOgyi0qMgIGpGKWqe92CSPpRmZ8ia9Pc4zFjytdKZcxEovKZSzkSb7WXx9YsB9mntUt3kOclWZqYuZ5MzurGB52r24pG5p6xWAwZSnMhCc022Yd4rarNlmL2X_3YpXOvNb6nlLhsQEl_IwEfhGR_W2UX2Lj_Y4PtBz9LzlPT6r46e68BoSvoaVqWs"/>
+</div>
+</div>
+</header>
+<main class="pt-28 pb-section-gap max-w-container-max mx-auto px-margin-desktop">
+<!-- Header Section -->
+<section class="mb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Role-Specific Insights</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant flex items-center gap-2">
+                        Targeting: <span class="text-secondary font-bold">Senior Product Designer</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full text-label-sm">High Priority</span>
+</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 border border-outline-variant px-4 py-2 rounded-lg text-label-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">download</span> Export PDF
+                    </button>
+<button class="flex items-center gap-2 border border-outline-variant px-4 py-2 rounded-lg text-label-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">share</span> Share Report
+                    </button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Compatibility Gap (SVG Progress) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest rounded-xl p-base card-shadow border border-outline-variant/10">
+<div class="p-4 flex flex-col items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 self-start">Compatibility Gap</h3>
+<div class="relative w-48 h-48 flex items-center justify-center mb-6">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-low" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-width="12"></circle>
+<circle class="animate-progress" cx="96" cy="96" fill="transparent" r="80" stroke="url(#gradient)" stroke-dasharray="502.4" stroke-dashoffset="502.4" stroke-linecap="round" stroke-width="12"></circle>
+<defs>
+<lineargradient id="gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#006591"></stop>
+<stop offset="100%" stop-color="#62fae3"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-4xl font-bold text-on-surface">78%</span>
+<span class="text-label-sm text-on-surface-variant">Matched</span>
+</div>
+</div>
+<div class="space-y-3 w-full">
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-lg">
+<span class="text-label-md">Experience Fit</span>
+<span class="text-secondary font-bold">85%</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-lg">
+<span class="text-label-md">Skill Alignment</span>
+<span class="text-secondary font-bold">72%</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-lg">
+<span class="text-label-md">Leadership Score</span>
+<span class="text-secondary font-bold">65%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Industry Benchmarking -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 card-shadow border border-outline-variant/10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-8">Industry Benchmarking</h3>
+<div class="space-y-8">
+<!-- Benchmarking Bars -->
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-label-md font-bold">Visual Design Mastery</span>
+<span class="text-label-sm text-on-surface-variant">Top 5% of Applicants</span>
+</div>
+<div class="h-4 w-full bg-surface-container-low rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary-container" style="width: 95%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-label-md font-bold">Design System Leadership</span>
+<span class="text-label-sm text-on-surface-variant">Average for Senior Role</span>
+</div>
+<div class="h-4 w-full bg-surface-container-low rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary" style="width: 60%"></div>
+</div>
+<div class="mt-1 flex items-center gap-1 text-error text-label-sm">
+<span class="material-symbols-outlined text-[14px]">warning</span> Focus needed here
+                        </div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-label-md font-bold">B2B SaaS Context</span>
+<span class="text-label-sm text-on-surface-variant">Top 15% of Applicants</span>
+</div>
+<div class="h-4 w-full bg-surface-container-low rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary-container" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-label-md font-bold">Accessibility (WCAG)</span>
+<span class="text-label-sm text-on-surface-variant">Below Role Benchmark</span>
+</div>
+<div class="h-4 w-full bg-surface-container-low rounded-full overflow-hidden flex">
+<div class="h-full bg-error" style="width: 35%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Critical Changes Panel -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-lowest rounded-xl p-8 card-shadow border border-outline-variant/10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Critical Changes</h3>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-label-sm">3 High Impact</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 p-4 rounded-lg bg-error-container/10 border-l-4 border-error">
+<span class="material-symbols-outlined text-error">priority_high</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Add specific B2B SaaS metrics</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Hiring managers for this role look for conversion, churn, or efficiency gains.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-low border-l-4 border-secondary">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Highlight leadership in design systems</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Explicitly mention "governance" and "multi-team adoption."</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-low border-l-4 border-secondary">
+<span class="material-symbols-outlined text-secondary">swap_vert</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Prioritize recent mobile work</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Re-order your experience to place the Native App project first.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-low border-l-4 border-on-tertiary-container/30">
+<span class="material-symbols-outlined text-on-tertiary-container">info</span>
+<div>
+<p class="font-label-md font-bold text-on-surface">Clarify cross-functional collab</p>
+<p class="text-label-sm text-on-surface-variant mt-1">Add "Engineers" and "Product Managers" to your collaboration statements.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Keyword Alignment Table -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-lowest rounded-xl p-8 card-shadow border border-outline-variant/10 overflow-hidden">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Keyword Alignment</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="pb-4 font-label-md text-on-surface-variant uppercase tracking-wider">Required Keyword</th>
+<th class="pb-4 font-label-md text-on-surface-variant uppercase tracking-wider">Occurrence</th>
+<th class="pb-4 font-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr>
+<td class="py-4 font-body-md font-bold">Interaction Design</td>
+<td class="py-4 text-body-md">4 times</td>
+<td class="py-4"><span class="flex items-center gap-1 text-on-tertiary-container"><span class="material-symbols-outlined text-[18px]" data-weight="fill">check_circle</span> Optimized</span></td>
+</tr>
+<tr>
+<td class="py-4 font-body-md font-bold">Figma Components</td>
+<td class="py-4 text-body-md">2 times</td>
+<td class="py-4"><span class="flex items-center gap-1 text-on-tertiary-container"><span class="material-symbols-outlined text-[18px]" data-weight="fill">check_circle</span> Optimized</span></td>
+</tr>
+<tr>
+<td class="py-4 font-body-md font-bold">User Research</td>
+<td class="py-4 text-body-md">1 time</td>
+<td class="py-4"><span class="flex items-center gap-1 text-on-secondary-fixed-variant"><span class="material-symbols-outlined text-[18px]">add_circle</span> Need more</span></td>
+</tr>
+<tr>
+<td class="py-4 font-body-md font-bold">A/B Testing</td>
+<td class="py-4 text-body-md">0 times</td>
+<td class="py-4"><span class="flex items-center gap-1 text-error"><span class="material-symbols-outlined text-[18px]">error</span> Missing</span></td>
+</tr>
+<tr>
+<td class="py-4 font-body-md font-bold">Heuristic Evaluation</td>
+<td class="py-4 text-body-md">0 times</td>
+<td class="py-4"><span class="flex items-center gap-1 text-error"><span class="material-symbols-outlined text-[18px]">error</span> Missing</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Impact Statements Optimization -->
+<div class="col-span-12 bg-surface-container-lowest rounded-xl p-8 card-shadow border border-outline-variant/10">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface">Impact Statement Optimization</h3>
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-lg text-label-md hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">auto_fix_high</span> Auto-Optimize All
+                    </button>
+</div>
+<div class="space-y-6">
+<!-- Comparison Row 1 -->
+<div class="grid md:grid-cols-2 gap-8 items-center p-6 rounded-xl bg-surface-container-low/50 border border-outline-variant/20 relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
+<span class="material-symbols-outlined bg-white text-secondary rounded-full p-2 shadow-sm border border-outline-variant/30">arrow_forward</span>
+</div>
+<div>
+<span class="text-label-sm font-bold uppercase tracking-widest text-on-surface-variant block mb-2">Original</span>
+<p class="font-body-md text-on-surface-variant bg-white p-4 rounded-lg border border-outline-variant italic">
+                                "Responsible for designing the user interface for our main SaaS product."
+                            </p>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-label-sm font-bold uppercase tracking-widest text-secondary">AI Optimized (Senior Role)</span>
+<span class="text-label-sm text-on-tertiary-container bg-tertiary-fixed/30 px-2 py-0.5 rounded">+45% Impact</span>
+</div>
+<p class="font-body-md text-on-surface bg-white p-4 rounded-lg border-2 border-secondary-container shadow-md">
+                                "Led end-to-end UX/UI for enterprise SaaS platform, achieving a <span class="text-secondary font-bold">12% reduction in user churn</span> through data-driven interface refinements."
+                            </p>
+</div>
+</div>
+<!-- Comparison Row 2 -->
+<div class="grid md:grid-cols-2 gap-8 items-center p-6 rounded-xl bg-surface-container-low/50 border border-outline-variant/20 relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block">
+<span class="material-symbols-outlined bg-white text-secondary rounded-full p-2 shadow-sm border border-outline-variant/30">arrow_forward</span>
+</div>
+<div>
+<span class="text-label-sm font-bold uppercase tracking-widest text-on-surface-variant block mb-2">Original</span>
+<p class="font-body-md text-on-surface-variant bg-white p-4 rounded-lg border border-outline-variant italic">
+                                "Built and maintained the company design system and component library."
+                            </p>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-label-sm font-bold uppercase tracking-widest text-secondary">AI Optimized (Senior Role)</span>
+<span class="text-label-sm text-on-tertiary-container bg-tertiary-fixed/30 px-2 py-0.5 rounded">+30% Scope</span>
+</div>
+<p class="font-body-md text-on-surface bg-white p-4 rounded-lg border-2 border-secondary-container shadow-md">
+                                "Spearheaded the <span class="text-secondary font-bold">governance and multi-team adoption</span> of an atomic design system, scaling development efficiency by 40%."
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Role Image Content -->
+<section class="mt-section-gap grid md:grid-cols-2 gap-gutter items-center">
+<div class="relative rounded-2xl overflow-hidden aspect-video card-shadow">
+<img alt="Design System Workspace" class="w-full h-full object-cover" data-alt="A high-end, modern design studio environment with large monitors displaying complex design system components and UI architecture. The lighting is soft and natural, pouring through large windows into a clean, minimalist workspace. The atmosphere is professional and collaborative, utilizing a cool blue and crisp white color palette to reflect a high-tech corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK45N5Heqyp2cnZ_b3Fc9XqK8MpPn82XCpOihDDHW5Oe_55raHkCn6pL-teiK8ncAjPWNnPTt0Cz5IFDTnBA6chCOUfdNoM-NRWn6PIqF4tST858zR8fGACPLPy-YoaEQpmwKO2mG_Y2K4ubpiSTeUEeM3o5pkDlLaSiHyOt0_SQ_kqHgekPWioSTLHr6zcjBjbcnBo1hQmkKsNAnvyZBPdJ1v7q-1qnFrMO8_cWjdhEE6_OUWa9TO1cr1L_Y5hmtk1hqtNM8Z_II"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+<p class="text-white font-headline-md text-headline-md">See your resume through a recruiter's eyes.</p>
+</div>
+</div>
+<div class="space-y-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Why Optimization Matters</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                    For a Senior Product Designer role, hiring managers spend less than 6 seconds on an initial scan. Our AI identifies exactly where you lack the depth required for this seniority level and provides the precise language used by high-tier design teams.
+                </p>
+<div class="flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-1">analytics</span>
+<div>
+<p class="font-label-md font-bold">Data-Driven Positioning</p>
+<p class="text-label-sm text-on-surface-variant">We align your results with actual successful placements in similar top-tier tech companies.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary mt-1">psychology</span>
+<div>
+<p class="font-label-md font-bold">Psychological Triggers</p>
+<p class="text-label-sm text-on-surface-variant">Our models are trained on the cognitive biases of recruiters to highlight what truly catches attention.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-section-gap bg-surface-container-lowest dark:bg-surface-container-highest border-t border-outline-variant">
+<div class="max-w-container-max mx-auto px-margin-desktop py-base flex flex-col md:flex-row justify-between items-center h-20">
+<span class="font-headline-md text-headline-md text-primary font-bold">CareerEmpower AI</span>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:underline underline-offset-4 transition-all" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:underline underline-offset-4 transition-all" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:underline underline-offset-4 transition-all" href="#">Help Center</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:underline underline-offset-4 transition-all" href="#">API Reference</a>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant mt-4 md:mt-0">© 2024 CareerEmpower AI. Professional Precision for Career Success.</p>
+</div>
+</footer>
+<script>
+        // Micro-interaction for hover effects on cards
+        document.querySelectorAll('.card-shadow').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('interactive-shadow', 'scale-[1.005]', 'transition-all', 'duration-300');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('interactive-shadow', 'scale-[1.005]');
+            });
+        });
+
+        // Simple smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body></html>
