@@ -150,6 +150,35 @@ class MinimalDOMMatrix {
   }
 }
 
+class MinimalImageData {
+  data: Uint8ClampedArray;
+  width: number;
+  height: number;
+
+  constructor(dataOrWidth: Uint8ClampedArray | number, widthOrHeight: number, height?: number) {
+    if (typeof dataOrWidth === "number") {
+      this.width = dataOrWidth;
+      this.height = widthOrHeight;
+      this.data = new Uint8ClampedArray(this.width * this.height * 4);
+      return;
+    }
+
+    this.data = dataOrWidth;
+    this.width = widthOrHeight;
+    this.height = height ?? Math.floor(this.data.length / (this.width * 4));
+  }
+}
+
+class MinimalPath2D {
+  addPath() {}
+  rect() {}
+  moveTo() {}
+  lineTo() {}
+  bezierCurveTo() {}
+  quadraticCurveTo() {}
+  closePath() {}
+}
+
 type PdfTextItem = {
   str?: string;
   hasEOL?: boolean;
@@ -158,10 +187,20 @@ type PdfTextItem = {
 function installPdfJsShims() {
   const globalScope = globalThis as typeof globalThis & {
     DOMMatrix?: typeof DOMMatrix;
+    ImageData?: typeof ImageData;
+    Path2D?: typeof Path2D;
   };
 
   if (!globalScope.DOMMatrix) {
     globalScope.DOMMatrix = MinimalDOMMatrix as unknown as typeof DOMMatrix;
+  }
+
+  if (!globalScope.ImageData) {
+    globalScope.ImageData = MinimalImageData as unknown as typeof ImageData;
+  }
+
+  if (!globalScope.Path2D) {
+    globalScope.Path2D = MinimalPath2D as unknown as typeof Path2D;
   }
 }
 
@@ -182,6 +221,7 @@ async function parsePdf(buffer: Buffer): Promise<string> {
     useSystemFonts: false,
     useWasm: false,
     useWorkerFetch: false,
+    verbosity: 0,
   });
 
   const pdf = await loadingTask.promise;
