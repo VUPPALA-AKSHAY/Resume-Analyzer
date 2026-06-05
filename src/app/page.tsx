@@ -65,7 +65,12 @@ function isAllowedResumeFile(file: File): boolean {
 }
 
 function getPopupForApiError(message: string): PopupState {
-  if (message.toLowerCase().includes("please upload correct resume")) {
+  const normalizedMessage = message.toLowerCase();
+  if (
+    normalizedMessage.includes("please upload correct resume") ||
+    normalizedMessage.includes("failed to parse pdf") ||
+    normalizedMessage.includes("failed to extract text")
+  ) {
     return {
       title: "Upload The Correct Resume",
       description: "Please upload correct resume.",
@@ -393,7 +398,7 @@ export default function Home() {
       })
       .catch((err) => {
         const message = err instanceof Error ? err.message : "Failed to analyze resume.";
-        if (!message.toLowerCase().includes("please upload correct resume")) {
+        if (getPopupForApiError(message).title !== "Upload The Correct Resume") {
           console.error("Analysis error:", err);
         }
         setApiError(message);

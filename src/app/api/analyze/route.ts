@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     if (!resumeText || !resumeText.trim()) {
       return NextResponse.json(
-        { error: "Failed to extract text. Make sure the file is not empty or corrupted." },
+        { error: "Please upload correct resume." },
         { status: 422 }
       );
     }
@@ -49,9 +49,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(analysisResult);
   } catch (error) {
+    const message = (error as Error).message || "Internal Server Error during analysis.";
+    if (message.toLowerCase().includes("please upload correct resume")) {
+      return NextResponse.json({ error: "Please upload correct resume." }, { status: 422 });
+    }
+
     console.error("[API POST /api/analyze] Exception caught:", error);
     return NextResponse.json(
-      { error: (error as Error).message || "Internal Server Error during analysis." },
+      { error: message },
       { status: 500 }
     );
   }

@@ -56,123 +56,20 @@ type PdfParseInstance = {
   getText(): Promise<{ text?: string }>;
 };
 
-type PdfParseConstructor = new (options: { data: Buffer | Uint8Array }) => PdfParseInstance;
-
-class MinimalDOMMatrix {
-  a: number;
-  b: number;
-  c: number;
-  d: number;
-  e: number;
-  f: number;
-
-  constructor(init?: number[]) {
-    const values = Array.isArray(init) ? init : [];
-    this.a = values[0] ?? 1;
-    this.b = values[1] ?? 0;
-    this.c = values[2] ?? 0;
-    this.d = values[3] ?? 1;
-    this.e = values[4] ?? 0;
-    this.f = values[5] ?? 0;
-  }
-
-  private multiplyValues(values: [number, number, number, number, number, number]) {
-    const [a, b, c, d, e, f] = values;
-    const nextA = this.a * a + this.c * b;
-    const nextB = this.b * a + this.d * b;
-    const nextC = this.a * c + this.c * d;
-    const nextD = this.b * c + this.d * d;
-    const nextE = this.a * e + this.c * f + this.e;
-    const nextF = this.b * e + this.d * f + this.f;
-
-    this.a = nextA;
-    this.b = nextB;
-    this.c = nextC;
-    this.d = nextD;
-    this.e = nextE;
-    this.f = nextF;
-  }
-
-  multiplySelf(other: MinimalDOMMatrix) {
-    this.multiplyValues([other.a, other.b, other.c, other.d, other.e, other.f]);
-    return this;
-  }
-
-  preMultiplySelf(other: MinimalDOMMatrix) {
-    const current: [number, number, number, number, number, number] = [
-      this.a,
-      this.b,
-      this.c,
-      this.d,
-      this.e,
-      this.f,
-    ];
-    this.a = other.a;
-    this.b = other.b;
-    this.c = other.c;
-    this.d = other.d;
-    this.e = other.e;
-    this.f = other.f;
-    this.multiplyValues(current);
-    return this;
-  }
-
-  translate(tx = 0, ty = 0) {
-    return new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]).translateSelf(tx, ty);
-  }
-
-  translateSelf(tx = 0, ty = 0) {
-    this.e += tx;
-    this.f += ty;
-    return this;
-  }
-
-  scale(scaleX = 1, scaleY = scaleX) {
-    return new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]).scaleSelf(scaleX, scaleY);
-  }
-
-  scaleSelf(scaleX = 1, scaleY = scaleX) {
-    this.a *= scaleX;
-    this.b *= scaleX;
-    this.c *= scaleY;
-    this.d *= scaleY;
-    return this;
-  }
-
-  invertSelf() {
-    const determinant = this.a * this.d - this.b * this.c;
-    if (!determinant) {
-      this.a = Number.NaN;
-      this.b = Number.NaN;
-      this.c = Number.NaN;
-      this.d = Number.NaN;
-      this.e = Number.NaN;
-      this.f = Number.NaN;
-      return this;
-    }
-
-    const nextA = this.d / determinant;
-    const nextB = -this.b / determinant;
-    const nextC = -this.c / determinant;
-    const nextD = this.a / determinant;
-    const nextE = (this.c * this.f - this.d * this.e) / determinant;
-    const nextF = (this.b * this.e - this.a * this.f) / determinant;
-
-    this.a = nextA;
-    this.b = nextB;
-    this.c = nextC;
-    this.d = nextD;
-    this.e = nextE;
-    this.f = nextF;
-    return this;
-  }
-}
+type PdfParseConstructor = new (options: {
+  data: Uint8Array;
+  disableFontFace?: boolean;
+  isEvalSupported?: boolean;
+  isImageDecoderSupported?: boolean;
+  isOffscreenCanvasSupported?: boolean;
+  stopAtErrors?: boolean;
+  useSystemFonts?: boolean;
+  useWasm?: boolean;
+  useWorkerFetch?: boolean;
+}) => PdfParseInstance;
 
 function getPdfParseConstructor(): PdfParseConstructor {
-  if (!globalThis.DOMMatrix) {
-    globalThis.DOMMatrix = MinimalDOMMatrix as typeof globalThis.DOMMatrix;
-  }
-
+  require("pdf-parse/worker");
   const pdfParseModule = require("pdf-parse") as { PDFParse: PdfParseConstructor };
   return pdfParseModule.PDFParse;
 }
@@ -186,15 +83,28 @@ export async function parseFile(
   const normalizedName = fileName.toLowerCase();
 
   if (normalizedMime === "application/pdf" || normalizedName.endsWith(".pdf")) {
+    let parser: PdfParseInstance | null = null;
+
     try {
       const PDFParse = getPdfParseConstructor();
-      const parser = new PDFParse({ data: buffer });
+      parser = new PDFParse({
+        data: new Uint8Array(buffer),
+        disableFontFace: true,
+        isEvalSupported: false,
+        isImageDecoderSupported: false,
+        isOffscreenCanvasSupported: false,
+        stopAtErrors: false,
+        useSystemFonts: false,
+        useWasm: false,
+        useWorkerFetch: false,
+      });
       const textResult = await parser.getText();
-      await parser.destroy();
       return textResult.text || "";
     } catch (error) {
       console.error("Error parsing PDF file:", error);
-      throw new Error("Failed to parse PDF file. Make sure it is a valid, unencrypted PDF.");
+      throw new Error("Please upload correct resume.");
+    } finally {
+      await parser?.destroy().catch(() => undefined);
     }
   }
 
