@@ -1,7 +1,4 @@
-import { createRequire } from "node:module";
 import mammoth from "mammoth";
-
-const require = createRequire(import.meta.url);
 
 const RESUME_SECTION_MARKERS = [
   "experience",
@@ -36,42 +33,169 @@ export function looksLikeResume(text: string): boolean {
   const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
   const hasContactSignal = emailMatch || phoneMatch || profileLinkMatch;
   const hasTimelineSignal = yearCount >= 2 || /\bpresent\b/i.test(text);
+  const hasResumeSections = coreSectionMatches.length >= 2 && sectionMatches.length >= 3;
 
   if (wordCount < 60) {
     return false;
   }
 
-  if (!hasContactSignal) {
-    return false;
-  }
-
   return (
-    (coreSectionMatches.length >= 2 && (sectionMatches.length >= 3 || hasTimelineSignal)) ||
+    (hasContactSignal && coreSectionMatches.length >= 2 && (sectionMatches.length >= 3 || hasTimelineSignal)) ||
+    (hasResumeSections && hasTimelineSignal && roleKeywordMatch) ||
     (coreSectionMatches.length >= 1 && bulletCount >= 3 && hasTimelineSignal && roleKeywordMatch)
   );
 }
 
-type PdfParseInstance = {
-  destroy(): Promise<void>;
-  getText(): Promise<{ text?: string }>;
+class MinimalDOMMatrix {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  e: number;
+  f: number;
+
+  constructor(init?: number[]) {
+    const values = Array.isArray(init) ? init : [];
+    this.a = values[0] ?? 1;
+    this.b = values[1] ?? 0;
+    this.c = values[2] ?? 0;
+    this.d = values[3] ?? 1;
+    this.e = values[4] ?? 0;
+    this.f = values[5] ?? 0;
+  }
+
+  multiplySelf(other: MinimalDOMMatrix) {
+    const [a, b, c, d, e, f] = [this.a, this.b, this.c, this.d, this.e, this.f];
+    this.a = a * other.a + c * other.b;
+    this.b = b * other.a + d * other.b;
+    this.c = a * other.c + c * other.d;
+    this.d = b * other.c + d * other.d;
+    this.e = a * other.e + c * other.f + e;
+    this.f = b * other.e + d * other.f + f;
+    return this;
+  }
+
+  preMultiplySelf(other: MinimalDOMMatrix) {
+    const current = new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]);
+    this.a = other.a;
+    this.b = other.b;
+    this.c = other.c;
+    this.d = other.d;
+    this.e = other.e;
+    this.f = other.f;
+    return this.multiplySelf(current);
+  }
+
+  translate(tx = 0, ty = 0) {
+    return new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]).translateSelf(tx, ty);
+  }
+
+  translateSelf(tx = 0, ty = 0) {
+    this.e += tx;
+    this.f += ty;
+    return this;
+  }
+
+  scale(scaleX = 1, scaleY = scaleX) {
+    return new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]).scaleSelf(scaleX, scaleY);
+  }
+
+  scaleSelf(scaleX = 1, scaleY = scaleX) {
+    this.a *= scaleX;
+    this.b *= scaleX;
+    this.c *= scaleY;
+    this.d *= scaleY;
+    return this;
+  }
+
+  invertSelf() {
+    const determinant = this.a * this.d - this.b * this.c;
+
+    if (!determinant) {
+      this.a = Number.NaN;
+      this.b = Number.NaN;
+      this.c = Number.NaN;
+      this.d = Number.NaN;
+      this.e = Number.NaN;
+      this.f = Number.NaN;
+      return this;
+    }
+
+    const [a, b, c, d, e, f] = [this.a, this.b, this.c, this.d, this.e, this.f];
+    this.a = d / determinant;
+    this.b = -b / determinant;
+    this.c = -c / determinant;
+    this.d = a / determinant;
+    this.e = (c * f - d * e) / determinant;
+    this.f = (b * e - a * f) / determinant;
+    return this;
+  }
+}
+
+type PdfTextItem = {
+  str?: string;
+  hasEOL?: boolean;
 };
 
-type PdfParseConstructor = new (options: {
-  data: Uint8Array;
-  disableFontFace?: boolean;
-  isEvalSupported?: boolean;
-  isImageDecoderSupported?: boolean;
-  isOffscreenCanvasSupported?: boolean;
-  stopAtErrors?: boolean;
-  useSystemFonts?: boolean;
-  useWasm?: boolean;
-  useWorkerFetch?: boolean;
-}) => PdfParseInstance;
+function installPdfJsShims() {
+  const globalScope = globalThis as typeof globalThis & {
+    DOMMatrix?: typeof DOMMatrix;
+  };
 
-function getPdfParseConstructor(): PdfParseConstructor {
-  require("pdf-parse/worker");
-  const pdfParseModule = require("pdf-parse") as { PDFParse: PdfParseConstructor };
-  return pdfParseModule.PDFParse;
+  if (!globalScope.DOMMatrix) {
+    globalScope.DOMMatrix = MinimalDOMMatrix as unknown as typeof DOMMatrix;
+  }
+}
+
+async function parsePdf(buffer: Buffer): Promise<string> {
+  installPdfJsShims();
+
+  const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const loadingTask = pdfjs.getDocument({
+    data: new Uint8Array(buffer),
+    disableAutoFetch: true,
+    disableFontFace: true,
+    disableRange: true,
+    disableStream: true,
+    isEvalSupported: false,
+    isImageDecoderSupported: false,
+    isOffscreenCanvasSupported: false,
+    stopAtErrors: false,
+    useSystemFonts: false,
+    useWasm: false,
+    useWorkerFetch: false,
+  });
+
+  const pdf = await loadingTask.promise;
+  const pages: string[] = [];
+
+  try {
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent({
+        disableNormalization: false,
+        includeMarkedContent: false,
+      });
+      const pageText = content.items
+        .map((item) => {
+          const textItem = item as PdfTextItem;
+          return `${textItem.str ?? ""}${textItem.hasEOL ? "\n" : " "}`;
+        })
+        .join("")
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+
+      if (pageText) {
+        pages.push(pageText);
+      }
+    }
+  } finally {
+    await pdf.destroy();
+    await loadingTask.destroy();
+  }
+
+  return pages.join("\n\n");
 }
 
 export async function parseFile(
@@ -83,27 +207,10 @@ export async function parseFile(
   const normalizedName = fileName.toLowerCase();
 
   if (normalizedMime === "application/pdf" || normalizedName.endsWith(".pdf")) {
-    let parser: PdfParseInstance | null = null;
-
     try {
-      const PDFParse = getPdfParseConstructor();
-      parser = new PDFParse({
-        data: new Uint8Array(buffer),
-        disableFontFace: true,
-        isEvalSupported: false,
-        isImageDecoderSupported: false,
-        isOffscreenCanvasSupported: false,
-        stopAtErrors: false,
-        useSystemFonts: false,
-        useWasm: false,
-        useWorkerFetch: false,
-      });
-      const textResult = await parser.getText();
-      return textResult.text || "";
+      return await parsePdf(buffer);
     } catch (error) {
       throw new Error("Please upload correct resume.");
-    } finally {
-      await parser?.destroy().catch(() => undefined);
     }
   }
 
