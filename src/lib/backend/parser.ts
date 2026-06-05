@@ -14,6 +14,24 @@ const RESUME_SECTION_MARKERS = [
 ];
 
 export function looksLikeResume(text: string): boolean {
+  const quickText = text.toLowerCase();
+  const quickWordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  const quickCharacterCount = text.trim().length;
+  const quickSignalCount = [
+    /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(text),
+    /(?:\+?\d{1,3}[\s.-]?)?(?:\(?\d{3}\)?[\s.-]?)?\d{3}[\s.-]?\d{4}/.test(text),
+    /(linkedin\.com\/|github\.com\/|portfolio|behance|dribbble)/i.test(text),
+    RESUME_SECTION_MARKERS.some((marker) => quickText.includes(marker)),
+    /\b(?:19|20)\d{2}\b|\bpresent\b/i.test(text),
+    /(engineer|developer|designer|manager|analyst|intern|consultant|specialist|lead|student)/i.test(text),
+    /(university|college|bachelor|master|degree|b\.?tech|m\.?tech|cgpa|gpa)/i.test(text),
+    /(javascript|typescript|react|next\.?js|node\.?js|python|java|sql|aws|azure|docker|api|machine learning|ai)/i.test(text),
+  ].filter(Boolean).length;
+
+  if (quickWordCount >= 25 && quickCharacterCount >= 100 && quickSignalCount >= 2) {
+    return true;
+  }
+
   const normalizedText = text.toLowerCase();
   const sectionMatches = RESUME_SECTION_MARKERS.filter((marker) =>
     normalizedText.includes(marker)
