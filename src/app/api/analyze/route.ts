@@ -30,15 +30,17 @@ export async function POST(request: NextRequest) {
     console.log(`[API POST /api/analyze] Processing '${file.name}' (${file.size} bytes)...`);
     const resumeText = await parseFile(buffer, file.type, file.name);
     const extractedWordCount = resumeText.trim().split(/\s+/).filter(Boolean).length;
+    console.log(
+      `[API POST /api/analyze] Extracted ${resumeText.length} characters and ${extractedWordCount} words.`
+    );
 
-    if (extractedWordCount < 15) {
+    if (extractedWordCount < 3) {
       return NextResponse.json(
         { error: "Please upload correct resume." },
         { status: 422 }
       );
     }
 
-    console.log(`[API POST /api/analyze] Extracted ${resumeText.length} characters from resume.`);
     console.log(`[API POST /api/analyze] Running AI evaluation for job role: '${jobRole}'...`);
     const analysisResult = await analyzeResume(resumeText, jobRole);
 

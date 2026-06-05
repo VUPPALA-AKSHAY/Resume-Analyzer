@@ -64,207 +64,59 @@ export function looksLikeResume(text: string): boolean {
   );
 }
 
-class MinimalDOMMatrix {
-  a: number;
-  b: number;
-  c: number;
-  d: number;
-  e: number;
-  f: number;
-
-  constructor(init?: number[]) {
-    const values = Array.isArray(init) ? init : [];
-    this.a = values[0] ?? 1;
-    this.b = values[1] ?? 0;
-    this.c = values[2] ?? 0;
-    this.d = values[3] ?? 1;
-    this.e = values[4] ?? 0;
-    this.f = values[5] ?? 0;
-  }
-
-  multiplySelf(other: MinimalDOMMatrix) {
-    const [a, b, c, d, e, f] = [this.a, this.b, this.c, this.d, this.e, this.f];
-    this.a = a * other.a + c * other.b;
-    this.b = b * other.a + d * other.b;
-    this.c = a * other.c + c * other.d;
-    this.d = b * other.c + d * other.d;
-    this.e = a * other.e + c * other.f + e;
-    this.f = b * other.e + d * other.f + f;
-    return this;
-  }
-
-  preMultiplySelf(other: MinimalDOMMatrix) {
-    const current = new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]);
-    this.a = other.a;
-    this.b = other.b;
-    this.c = other.c;
-    this.d = other.d;
-    this.e = other.e;
-    this.f = other.f;
-    return this.multiplySelf(current);
-  }
-
-  translate(tx = 0, ty = 0) {
-    return new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]).translateSelf(tx, ty);
-  }
-
-  translateSelf(tx = 0, ty = 0) {
-    this.e += tx;
-    this.f += ty;
-    return this;
-  }
-
-  scale(scaleX = 1, scaleY = scaleX) {
-    return new MinimalDOMMatrix([this.a, this.b, this.c, this.d, this.e, this.f]).scaleSelf(scaleX, scaleY);
-  }
-
-  scaleSelf(scaleX = 1, scaleY = scaleX) {
-    this.a *= scaleX;
-    this.b *= scaleX;
-    this.c *= scaleY;
-    this.d *= scaleY;
-    return this;
-  }
-
-  invertSelf() {
-    const determinant = this.a * this.d - this.b * this.c;
-
-    if (!determinant) {
-      this.a = Number.NaN;
-      this.b = Number.NaN;
-      this.c = Number.NaN;
-      this.d = Number.NaN;
-      this.e = Number.NaN;
-      this.f = Number.NaN;
-      return this;
-    }
-
-    const [a, b, c, d, e, f] = [this.a, this.b, this.c, this.d, this.e, this.f];
-    this.a = d / determinant;
-    this.b = -b / determinant;
-    this.c = -c / determinant;
-    this.d = a / determinant;
-    this.e = (c * f - d * e) / determinant;
-    this.f = (b * e - a * f) / determinant;
-    return this;
-  }
-}
-
-class MinimalImageData {
-  data: Uint8ClampedArray;
-  width: number;
-  height: number;
-
-  constructor(dataOrWidth: Uint8ClampedArray | number, widthOrHeight: number, height?: number) {
-    if (typeof dataOrWidth === "number") {
-      this.width = dataOrWidth;
-      this.height = widthOrHeight;
-      this.data = new Uint8ClampedArray(this.width * this.height * 4);
-      return;
-    }
-
-    this.data = dataOrWidth;
-    this.width = widthOrHeight;
-    this.height = height ?? Math.floor(this.data.length / (this.width * 4));
-  }
-}
-
-class MinimalPath2D {
-  addPath() {}
-  rect() {}
-  moveTo() {}
-  lineTo() {}
-  bezierCurveTo() {}
-  quadraticCurveTo() {}
-  closePath() {}
-}
-
-type PdfTextItem = {
-  str?: string;
-  hasEOL?: boolean;
-};
-
-function installPdfJsShims() {
-  const globalScope = globalThis as typeof globalThis & {
-    DOMMatrix?: typeof DOMMatrix;
-    ImageData?: typeof ImageData;
-    Path2D?: typeof Path2D;
-  };
-
-  if (!globalScope.DOMMatrix) {
-    globalScope.DOMMatrix = MinimalDOMMatrix as unknown as typeof DOMMatrix;
-  }
-
-  if (!globalScope.ImageData) {
-    globalScope.ImageData = MinimalImageData as unknown as typeof ImageData;
-  }
-
-  if (!globalScope.Path2D) {
-    globalScope.Path2D = MinimalPath2D as unknown as typeof Path2D;
-  }
-}
-
-async function parsePdf(buffer: Buffer): Promise<string> {
-  installPdfJsShims();
-
+/**
+ * Suppress noisy warnings from unpdf/pdfjs internals during PDF parsing.
+ */
+async function withSuppressedPdfWarnings<T>(callback: () => Promise<T>): Promise<T> {
   const originalWarn = console.warn;
   console.warn = (...args: Parameters<typeof console.warn>) => {
     const message = args.map(String).join(" ");
-    if (message.includes("Please use the `legacy` build in Node.js environments")) {
+    if (
+      message.includes("Indexing all PDF objects") ||
+      message.includes("Unknown command") ||
+      message.includes("Please use the `legacy` build") ||
+      message.includes('Cannot load "@napi-rs/canvas"') ||
+      message.includes("Cannot polyfill")
+    ) {
       return;
     }
     originalWarn(...args);
   };
 
-  const pdfjs = await import("pdfjs-dist/build/pdf.mjs").finally(() => {
-    console.warn = originalWarn;
-  });
-  const loadingTask = pdfjs.getDocument({
-    data: new Uint8Array(buffer),
-    disableAutoFetch: true,
-    disableFontFace: true,
-    disableRange: true,
-    disableStream: true,
-    isEvalSupported: false,
-    isImageDecoderSupported: false,
-    isOffscreenCanvasSupported: false,
-    stopAtErrors: false,
-    useSystemFonts: false,
-    useWasm: false,
-    useWorkerFetch: false,
-    verbosity: 0,
-  });
-
-  const pdf = await loadingTask.promise;
-  const pages: string[] = [];
-
   try {
-    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-      const page = await pdf.getPage(pageNumber);
-      const content = await page.getTextContent({
-        disableNormalization: false,
-        includeMarkedContent: false,
-      });
-      const pageText = content.items
-        .map((item) => {
-          const textItem = item as PdfTextItem;
-          return `${textItem.str ?? ""}${textItem.hasEOL ? "\n" : " "}`;
-        })
-        .join("")
+    return await callback();
+  } finally {
+    console.warn = originalWarn;
+  }
+}
+
+/**
+ * Parse PDF using `unpdf` — a Node.js-native PDF text extractor that doesn't
+ * rely on browser globals (DOMMatrix, Path2D) or web workers, avoiding the
+ * Turbopack bundling issues that plague pdfjs-dist in Next.js server routes.
+ */
+async function parsePdf(buffer: Buffer): Promise<string> {
+  const { extractText } = await import("unpdf");
+
+  const result = await withSuppressedPdfWarnings(async () => {
+    return extractText(new Uint8Array(buffer));
+  });
+
+  // unpdf returns an array of strings (one per page)
+  const pages = Array.isArray(result.text) ? result.text : [result.text];
+
+  const fullText = pages
+    .map((pageText: string) =>
+      pageText
         .replace(/[ \t]+\n/g, "\n")
         .replace(/\n{3,}/g, "\n\n")
-        .trim();
+        .trim()
+    )
+    .filter(Boolean)
+    .join("\n\n");
 
-      if (pageText) {
-        pages.push(pageText);
-      }
-    }
-  } finally {
-    await pdf.destroy();
-    await loadingTask.destroy();
-  }
-
-  return pages.join("\n\n");
+  console.log(`[Parser] unpdf extracted ${fullText.length} chars from ${result.totalPages} page(s).`);
+  return fullText;
 }
 
 export async function parseFile(
@@ -279,6 +131,7 @@ export async function parseFile(
     try {
       return await parsePdf(buffer);
     } catch (error) {
+      console.error("[Parser] PDF parsing failed:", error);
       throw new Error("Please upload correct resume.");
     }
   }
