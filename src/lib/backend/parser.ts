@@ -101,7 +101,6 @@ export async function parseFile(
       const textResult = await parser.getText();
       return textResult.text || "";
     } catch (error) {
-      console.error("Error parsing PDF file:", error);
       throw new Error("Please upload correct resume.");
     } finally {
       await parser?.destroy().catch(() => undefined);
@@ -118,8 +117,7 @@ export async function parseFile(
       const result = await mammoth.extractRawText({ buffer });
       return result.value || "";
     } catch (error) {
-      console.error("Error parsing DOCX file:", error);
-      throw new Error("Failed to parse DOCX file. Make sure it is a valid Word document.");
+      throw new Error("Please upload correct resume.");
     }
   }
 
