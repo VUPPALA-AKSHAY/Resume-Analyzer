@@ -1,6 +1,6 @@
 import mammoth from "mammoth";
+import "pdf-parse/worker";
 import { PDFParse } from "pdf-parse";
-import "pdfjs-dist/legacy/build/pdf.worker.mjs";
 
 const RESUME_SECTION_MARKERS = [
   "experience",
