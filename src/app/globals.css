@@ -164,14 +164,14 @@
 }
 
 html {
-  font-family: var(--font-sans), sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-on-surface);
-  font-family: "Inter", var(--font-sans), sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 * {
