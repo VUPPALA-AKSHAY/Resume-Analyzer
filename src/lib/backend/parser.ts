@@ -207,7 +207,18 @@ function installPdfJsShims() {
 async function parsePdf(buffer: Buffer): Promise<string> {
   installPdfJsShims();
 
-  const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const originalWarn = console.warn;
+  console.warn = (...args: Parameters<typeof console.warn>) => {
+    const message = args.map(String).join(" ");
+    if (message.includes("Please use the `legacy` build in Node.js environments")) {
+      return;
+    }
+    originalWarn(...args);
+  };
+
+  const pdfjs = await import("pdfjs-dist/build/pdf.mjs").finally(() => {
+    console.warn = originalWarn;
+  });
   const loadingTask = pdfjs.getDocument({
     data: new Uint8Array(buffer),
     disableAutoFetch: true,
