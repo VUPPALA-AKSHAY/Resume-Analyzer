@@ -64,6 +64,8 @@ The app has three chart views.
   - Leadership
   - Keywords
 - This chart is useful when you want to know which part of the resume should be improved first.
+- Role Fit by Section means how well each part of your resume matches the job,
+- Impact Strength means how strong and impressive that part sounds.
 
 ## Detailed resume evaluation
 
